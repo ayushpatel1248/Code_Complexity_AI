@@ -4,13 +4,10 @@ from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv
 import re
 
-# Load environment variables
 load_dotenv()
 
-# Initialize model
 model = ChatGoogleGenerativeAI(model='gemini-2.5-pro')
 
-# --- Streamlit UI ---
 st.set_page_config(page_title="CodeGuru AI", layout="centered")
 
 st.markdown("""
@@ -18,10 +15,8 @@ st.markdown("""
     <p style='text-align:center; color:gray;'>Paste your code below aur dekho kitna optimized likha hai...</p>
 """, unsafe_allow_html=True)
 
-# Large text area for code input
 input_code = st.text_area("Code Paste Karo Yahan Pe:", height=300, placeholder="Yahan apna code paste kro...")
 
-# Define prompt template
 template = PromptTemplate(
     template="""
     Find the time and space complexity of this code:
@@ -51,10 +46,8 @@ template = PromptTemplate(
     input_variables=["input_code"]
 )
 
-# Create prompt
 prompt = template.invoke({"input_code": input_code})
 
-# Submit button
 if st.button("Analyze Code"):
     if input_code.strip() == "":
         st.warning("Arre bhai! Pehle code to daalo 😅")
@@ -62,11 +55,9 @@ if st.button("Analyze Code"):
         with st.spinner("Thoda ruk jao... Code samajh raha hoon 🤔"):
             response = model.invoke(prompt)
 
-        # --- Output UI ---
         st.markdown("---")
         st.text_area("Explanation:", value=response.content, height=200)
 
-        # Optional: extract TC & SC roughly if present
         tc_match = re.search(
             r"(?:time\s*complexity\s*[:=]?\s*|TC\s*[:=]?\s*)(O\s*\(.*?\))",
             response.content,
