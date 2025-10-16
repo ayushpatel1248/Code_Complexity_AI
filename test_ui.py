@@ -18,8 +18,6 @@ class BigO(BaseModel):
     description: str = Field(description="Description of the code complexity in Hinglish")
 
 
-st.set_page_config(page_title="CodeGuru AI", layout="centered")
-
 st.markdown("""
     <h1 style='text-align:center; color:#00BFFF;'>CodeGuru AI - Code Complexity Analysis</h1>
     <p style='text-align:center; color:gray;'>Paste your code below aur dekho kitna optimized likha hai...</p>
