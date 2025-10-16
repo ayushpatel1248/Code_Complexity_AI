@@ -6,6 +6,8 @@ from langchain_core.output_parsers import PydanticOutputParser
 from dotenv import load_dotenv
 import re
 
+st.set_page_config(page_title="CodeGuru AI", layout="centered", menu_items=None)
+
 load_dotenv()
 
 model = ChatGoogleGenerativeAI(model='gemini-2.5-pro')
@@ -70,7 +72,7 @@ if st.button("Analyze Code"):
         with st.spinner("Thoda ruk jao... Code samajh raha hoon 🤔"):
             chain = template | model | parser
             response = chain.invoke({"input_code": input_code})
-            print(response)
+            # print(response)
 
         st.markdown("---")
         st.markdown("### Complexity Results:")
