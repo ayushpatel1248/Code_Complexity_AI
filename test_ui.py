@@ -1,12 +1,20 @@
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
+from pydantic import BaseModel, Field
+from langchain_core.output_parsers import PydanticOutputParser
 from dotenv import load_dotenv
 import re
 
 load_dotenv()
 
 model = ChatGoogleGenerativeAI(model='gemini-2.5-pro')
+
+class BigO(BaseModel):
+    time_complexity: str = Field(description="Time complexity in Big O notation")
+    space_complexity: str = Field(description="Time complexity in Big O notation")
+    description: str = Field(description="Description of the code complexity in Hinglish")
+
 
 st.set_page_config(page_title="CodeGuru AI", layout="centered")
 
@@ -16,6 +24,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 input_code = st.text_area("Code Paste Karo Yahan Pe:", height=300, placeholder="Yahan apna code paste kro...")
+
+parser = PydanticOutputParser(pydantic_object=BigO)
+
 
 template = PromptTemplate(
     template="""
@@ -42,37 +53,30 @@ template = PromptTemplate(
     Example if no code is given instead something else in input:
     Bhai bina code ke main analysis kaise karu 😅
     Pehle thoda code likh ke bhej do phir batata hoon.
+    {format_instruction}
     """,
-    input_variables=["input_code"]
+    input_variables=["input_code"],
+    partial_variables = {"format_instruction": parser.get_format_instructions()}
 )
 
-prompt = template.invoke({"input_code": input_code})
+# prompt = template.invoke({"input_code": input_code})
+
+
 
 if st.button("Analyze Code"):
     if input_code.strip() == "":
         st.warning("Arre bhai! Pehle code to daalo 😅")
     else:
         with st.spinner("Thoda ruk jao... Code samajh raha hoon 🤔"):
-            response = model.invoke(prompt)
+            chain = template | model | parser
+            response = chain.invoke({"input_code": input_code})
+            print(response)
 
         st.markdown("---")
-        st.text_area("Explanation:", value=response.content, height=200)
-
-        tc_match = re.search(
-            r"(?:time\s*complexity\s*[:=]?\s*|TC\s*[:=]?\s*)(O\s*\(.*?\))",
-            response.content,
-            flags=re.IGNORECASE
-        )
-        sc_match = re.search(
-            r"(?:space\s*complexity\s*[:=]?\s*|SC\s*[:=]?\s*)(O\s*\(.*?\))",
-            response.content,
-            flags=re.IGNORECASE
-        )
-
-        tc = tc_match.group(1) if tc_match else "Not clearly mentioned"
-        sc = sc_match.group(1) if sc_match else "Not clearly mentioned"
-
         st.markdown("### Complexity Results:")
         col1, col2 = st.columns(2)
-        col1.metric("Time Complexity", tc)
-        col2.metric("Space Complexity", sc)
+        col1.metric("Time Complexity", response.time_complexity)
+        col2.metric("Space Complexity", response.space_complexity)
+        st.text_area("Explanation:", value=response.description, height=200)
+      
+       
