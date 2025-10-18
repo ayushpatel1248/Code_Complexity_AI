@@ -11,7 +11,6 @@ st.set_page_config(page_title="CodeGuru AI", layout="centered", menu_items=None)
 load_dotenv()
 
 model = ChatGoogleGenerativeAI(model='gemini-2.5-pro')
-
 class BigO(BaseModel):
     time_complexity: str = Field(description="Time complexity in Big O notation")
     space_complexity: str = Field(description="Time complexity in Big O notation")
@@ -78,5 +77,3 @@ if st.button("Analyze Code"):
         col1.metric("Time Complexity", response.time_complexity)
         col2.metric("Space Complexity", response.space_complexity)
         st.text_area("Explanation:", value=response.description, height=200)
-      
-       
