@@ -1,3 +1,4 @@
+--prefer-binary
 # Streamlit
 streamlit==1.39.0
 
