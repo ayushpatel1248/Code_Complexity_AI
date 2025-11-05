@@ -1,26 +1,32 @@
- # LangChain Core
-langchain
-langchain-core
+# Streamlit
+streamlit
+
+# LangChain Core (Pinned for compatibility)
+langchain==0.2.14
+langchain-core==0.2.36
 
 # OpenAI Integration
-langchain-openai
-openai
+langchain-openai==0.1.16
+openai==1.51.0
 
 # Anthropic Integration
-langchain-anthropic
+langchain-anthropic==0.1.18
 
 # Google Gemini (PaLM) Integration
-langchain-google-genai
-google-generativeai
+langchain-google-genai==0.0.9
+google-generativeai==0.7.2
 
 # Hugging Face Integration
-langchain-huggingface
-transformers
-huggingface-hub
+langchain-huggingface==0.0.3
+transformers==4.44.2
+huggingface-hub==0.25.1
 
 # Environment Variable Management
-python-dotenv
+python-dotenv==1.0.1
 
 # Machine Learning Utilities
-numpy
-scikit-learn
+numpy==1.26.4
+scikit-learn==1.5.1
+
+# Pydantic (Required for older LangChain)
+pydantic==1.10.13
